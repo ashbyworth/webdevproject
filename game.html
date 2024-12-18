@@ -4,18 +4,197 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Music Trivia Game</title>
-    <link rel="stylesheet" href="css/gamestyles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+    
+        #quiz-container {
+            display: block;
+            margin: 0 auto;
+            padding: 20px;
+            width: 80%;
+            max-width: 600px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+    
+        h1 {
+            font-size: 24px;
+            color: #333;
+        }
+    
+        #question-container {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+    
+        #answers-container button {
+            font-size: 16px;
+            padding: 10px;
+            margin: 5px;
+            width: 100%;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        }
+    
+        #answers-container button:hover {
+            background-color: #45a049;
+        }
+    
+        #result {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+    
 </head>
 <body>
+
     <div id="quiz-container">
         <h1>Music Trivia</h1>
         <div id="question-container"></div>
         <div id="answers-container"></div>
     </div>
+
     <div id="result" style="display: none;"></div> <!-- Hidden initially -->
-    <script src="js/gamescript.js"></script>
+
+    <script>
+        const questions = [
+            {
+                question: "Who is known as the 'King of Pop'?",
+                options: ["Michael Jackson", "Elvis Presley", "Prince", "Justin Timberlake"],
+                correct: 0
+            },
+            {
+                question: "Which band wrote the hit song 'Bohemian Rhapsody'?",
+                options: ["The Beatles", "Queen", "The Rolling Stones", "Led Zeppelin"],
+                correct: 1
+            },
+            {
+                question: "What year did The Beatles disband?",
+                options: ["1970", "1965", "1980", "1969"],
+                correct: 0
+            },
+            {
+                question: "Who won the first season of 'American Idol'?",
+                options: ["Kelly Clarkson", "Carrie Underwood", "Jennifer Hudson", "Adam Lambert"],
+                correct: 0
+            },
+            {
+                question: "Which of these artists is known for the song 'Uptown Funk'?",
+                options: ["Bruno Mars", "Justin Bieber", "Pharrell Williams", "Ed Sheeran"],
+                correct: 0
+            },
+            {
+                question: "What was the best-selling album of all time?",
+                options: ["Thriller by Michael Jackson", "Back in Black by AC/DC", "The Dark Side of the Moon by Pink Floyd", "The Wall by Pink Floyd"],
+                correct: 0
+            },
+            {
+                question: "Who is the 'Queen of Pop'?",
+                options: ["Lady Gaga", "Madonna", "Britney Spears", "Beyoncé"],
+                correct: 1
+            },
+            {
+                question: "What is Taylor Swift's first album called?",
+                options: ["Taylor Swift", "Red", "1989", "Fearless"],
+                correct: 0
+            },
+            {
+                question: "What genre is the band Nirvana associated with?",
+                options: ["Grunge", "Metal", "Punk", "Indie Rock"],
+                correct: 0
+            },
+            {
+                question: "What is the stage name of the artist born as Robyn Fenty?",
+                options: ["Rihanna", "Nicki Minaj", "Cardi B", "Beyoncé"],
+                correct: 0
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        // Shuffle function to randomize the options
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]]; // Swap elements
+            }
+        }
+
+        function displayQuestion() {
+            const question = questions[currentQuestionIndex];
+            const questionContainer = document.getElementById('question-container');
+            const answersContainer = document.getElementById('answers-container');
+
+            // Shuffle the answer options to randomize their order
+            const shuffledOptions = [...question.options];
+            shuffleArray(shuffledOptions);
+
+            // Update the correct index based on the shuffled order
+            const correctIndex = shuffledOptions.indexOf(question.options[question.correct]);
+
+            questionContainer.innerHTML = question.question;
+            answersContainer.innerHTML = ''; // Clear previous answers
+
+            shuffledOptions.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.onclick = () => checkAnswer(index === correctIndex);
+                answersContainer.appendChild(button);
+            });
+        }
+
+        function checkAnswer(isCorrect) {
+            if (isCorrect) {
+                score++;
+            }
+            nextQuestion();  // Proceed to the next question after an answer is selected
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                displayQuestion();
+            } else {
+                showResult(); // Show results after all questions are answered
+            }
+        }
+
+        function showResult() {
+            const resultContainer = document.getElementById('result');
+            const quizContainer = document.getElementById('quiz-container');
+
+            // Display the final score message
+            resultContainer.textContent = `You completed the quiz, here's your score: ${score} / ${questions.length}`;
+
+            // Show the result container and hide the quiz container
+            resultContainer.style.display = 'block';
+            quizContainer.style.display = 'none';
+        }
+
+        displayQuestion();  // Start the quiz when the page loads
+    </script>
+
 </body>
 </html>
+
 
 
 
